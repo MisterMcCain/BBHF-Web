@@ -129,7 +129,7 @@ window.fetch = function(...args) {
 			return response;
 		})
 		.catch(error => {
-			if (!url.match(/\.html?$/i)) {
+			if (!url.match(/\\.html?$/i)) {
 				console.error(error);
 			}
 
@@ -156,7 +156,7 @@ const addTransformIndexHtml = {
 			},
 			{
 				tag: 'script',
-				attrs: {type: 'module'},
+				attrs: { type: 'module' },
 				children: configHorizonsConsoleErrroHandler,
 				injectTo: 'head',
 			},
@@ -169,37 +169,31 @@ const addTransformIndexHtml = {
 		];
 
 		if (!isDev && process.env.TEMPLATE_BANNER_SCRIPT_URL && process.env.TEMPLATE_REDIRECT_URL) {
-			tags.push(
-				{
-					tag: 'script',
-					attrs: {
-						src: process.env.TEMPLATE_BANNER_SCRIPT_URL,
-						'template-redirect-url': process.env.TEMPLATE_REDIRECT_URL,
-					},
-					injectTo: 'head',
-				}
-			);
+			tags.push({
+				tag: 'script',
+				attrs: {
+					src: process.env.TEMPLATE_BANNER_SCRIPT_URL,
+					'template-redirect-url': process.env.TEMPLATE_REDIRECT_URL,
+				},
+				injectTo: 'head',
+			});
 		}
 
-		return {
-			html,
-			tags,
-		};
+		return { html, tags };
 	},
 };
 
 console.warn = () => {};
 
-const logger = createLogger()
-const loggerError = logger.error
+const logger = createLogger();
+const loggerError = logger.error;
 
 logger.error = (msg, options) => {
 	if (options?.error?.toString().includes('CssSyntaxError: [postcss]')) {
 		return;
 	}
-
 	loggerError(msg, options);
-}
+};
 
 export default defineConfig({
 	customLogger: logger,
@@ -208,19 +202,15 @@ export default defineConfig({
 		react(),
 		addTransformIndexHtml
 	],
-server: {
-  cors: true,
-  headers: {
-    'Cross-Origin-Embedder-Policy': 'credentialless',
-  },
-  allowedHosts: [
-    'busbahnhof.fun',
-    'www.busbahnhof.fun',
-    'busbahnhof.vercel.app'
-  ],
-},
+	server: {
+		cors: true,
+		headers: {
+			'Cross-Origin-Embedder-Policy': 'credentialless',
+		},
+		allowedHosts: true,
+	},
 	resolve: {
-		extensions: ['.jsx', '.js', '.tsx', '.ts', '.json', ],
+		extensions: ['.jsx', '.js', '.tsx', '.ts', '.json'],
 		alias: {
 			'@': path.resolve(__dirname, './src'),
 		},
@@ -232,7 +222,7 @@ server: {
 				'@babel/traverse',
 				'@babel/generator',
 				'@babel/types'
-			]
-		}
-	}
+			],
+		},
+	},
 });
