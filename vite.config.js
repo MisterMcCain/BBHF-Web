@@ -208,13 +208,17 @@ export default defineConfig({
 		react(),
 		addTransformIndexHtml
 	],
-	server: {
-		cors: true,
-		headers: {
-			'Cross-Origin-Embedder-Policy': 'credentialless',
-		},
-		allowedHosts: true,
-	},
+server: {
+  cors: true,
+  headers: {
+    'Cross-Origin-Embedder-Policy': 'credentialless',
+  },
+  allowedHosts: [
+    'busbahnhof.fun',
+    'www.busbahnhof.fun',
+    'busbahnhof.vercel.app'
+  ],
+},
 	resolve: {
 		extensions: ['.jsx', '.js', '.tsx', '.ts', '.json', ],
 		alias: {
