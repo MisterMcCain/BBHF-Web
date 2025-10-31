@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="de">
+	<head>
+		<meta charset="UTF-8" />
+		<link
+			rel="icon"
+			type="image/png"
+			href="https://storage.googleapis.com/hostinger-horizons-assets-prod/071dade1-1e9e-4e60-9a92-463dc65e7bd5/5fb93a7e4ab4cad2997dd98e77938f6b.png"
+		/>
+		<meta name="generator" content="Hostinger Horizons" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>🎃 Busbahnhof Community App</title>
+		<meta
+			name="description"
+			content="Die offizielle App der Busbahnhof Discord Community - Bleibe auf dem Laufenden mit Updates von mistermccain.com und cloudium.host"
+		/>
+
+		<!-- 🟠 Orange Schrift + schwebender Kürbis 🎃 -->
+		<style>
+			/* Schrift- und Linkfarbe */
+			body {
+				color: #ff7518; /* Orange Text */
+				font-family: "Segoe UI", sans-serif;
+			}
+			a {
+				color: #ff7518;
+				text-decoration: none;
+				transition: color 0.3s ease;
+			}
+			a:hover {
+				color: #4b0082; /* Dunkelviolett beim Hover */
+			}
+
+/* 🎃 Schwebender Kürbis unten rechts */
+body::after {
+  content: "🎃";
+  position: fixed;
+  bottom: 15px;
+  right: 15px; /* unten rechts */
+  font-size: 2.2rem;
+  opacity: 0.85;
+  z-index: 9999;
+  animation: float 3s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+
+
+			@keyframes float {
+				from {
+					transform: translateY(0);
+				}
+				to {
+					transform: translateY(-6px);
+				}
+			}
+		</style>
+		<script type="module" crossorigin src="/assets/index-d830c4ed.js"></script>
+		<link rel="stylesheet" href="/assets/index-454334bc.css">
+		<script type="module">
+window.onerror = (message, source, lineno, colno, errorObj) => {
+	const errorDetails = errorObj ? JSON.stringify({
+		name: errorObj.name,
+		message: errorObj.message,
+		stack: errorObj.stack,
+		source,
+		lineno,
+		colno,
+	}) : null;
+
+	window.parent.postMessage({
+		type: 'horizons-runtime-error',
+		message,
+		error: errorDetails
+	}, '*');
+};
+</script>
+		<script type="module">
+const observer = new MutationObserver((mutations) => {
+	for (const mutation of mutations) {
+		for (const addedNode of mutation.addedNodes) {
+			if (
+				addedNode.nodeType === Node.ELEMENT_NODE &&
+				(
+					addedNode.tagName?.toLowerCase() === 'vite-error-overlay' ||
+					addedNode.classList?.contains('backdrop')
+				)
+			) {
+				handleViteOverlay(addedNode);
+			}
+		}
+	}
+});
+
+observer.observe(document.documentElement, {
+	childList: true,
+	subtree: true
+});
+
+function handleViteOverlay(node) {
+	if (!node.shadowRoot) {
+		return;
+	}
+
+	const backdrop = node.shadowRoot.querySelector('.backdrop');
+
+	if (backdrop) {
+		const overlayHtml = backdrop.outerHTML;
+		const parser = new DOMParser();
+		const doc = parser.parseFromString(overlayHtml, 'text/html');
+		const messageBodyElement = doc.querySelector('.message-body');
+		const fileElement = doc.querySelector('.file');
+		const messageText = messageBodyElement ? messageBodyElement.textContent.trim() : '';
+		const fileText = fileElement ? fileElement.textContent.trim() : '';
+		const error = messageText + (fileText ? ' File:' + fileText : '');
+
+		window.parent.postMessage({
+			type: 'horizons-vite-error',
+			error,
+		}, '*');
+	}
+}
+</script>
+		<script type="module">
+const originalConsoleError = console.error;
+console.error = function(...args) {
+	originalConsoleError.apply(console, args);
+
+	let errorString = '';
+
+	for (let i = 0; i < args.length; i++) {
+		const arg = args[i];
+		if (arg instanceof Error) {
+			errorString = arg.stack || `${arg.name}: ${arg.message}`;
+			break;
+		}
+	}
+
+	if (!errorString) {
+		errorString = args.map(arg => typeof arg === 'object' ? JSON.stringify(arg) : String(arg)).join(' ');
+	}
+
+	window.parent.postMessage({
+		type: 'horizons-console-error',
+		error: errorString
+	}, '*');
+};
+</script>
+		<script type="module">
+const originalFetch = window.fetch;
+
+window.fetch = function(...args) {
+	const url = args[0] instanceof Request ? args[0].url : args[0];
+
+	// Skip WebSocket URLs
+	if (url.startsWith('ws:') || url.startsWith('wss:')) {
+		return originalFetch.apply(this, args);
+	}
+
+	return originalFetch.apply(this, args)
+		.then(async response => {
+			const contentType = response.headers.get('Content-Type') || '';
+
+			// Exclude HTML document responses
+			const isDocumentResponse =
+				contentType.includes('text/html') ||
+				contentType.includes('application/xhtml+xml');
+
+			if (!response.ok && !isDocumentResponse) {
+					const responseClone = response.clone();
+					const errorFromRes = await responseClone.text();
+					const requestUrl = response.url;
+					console.error(`Fetch error from ${requestUrl}: ${errorFromRes}`);
+			}
+
+			return response;
+		})
+		.catch(error => {
+			if (!url.match(/.html?$/i)) {
+				console.error(error);
+			}
+
+			throw error;
+		});
+};
+</script>
+	</head>
+
+	<body>
+		<div id="root"></div>
+		
+	</body>
+</html>
